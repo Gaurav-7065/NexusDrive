@@ -12,9 +12,9 @@ app.get("/",(req,res)=>{
 const startServer=async()=>{
     try{
         await connectDb();
-        app.listen(ENV.PORT,()=>[
+        app.listen(ENV.PORT,()=>{
                 console.log(`server running on ${ENV.PORT}`)
-        ])
+    })
     }
     catch(error){
         console.log("Server error",error);

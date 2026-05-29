@@ -14,7 +14,7 @@ const JobsSchema=new mongoose.Schema({
         required:true,
     },
     minCgpa:{
-        type:String,
+        type:Number,
         required:true
     },
     allowedYears:[{
