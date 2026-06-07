@@ -1,24 +1,25 @@
 import React from "react";
-import { Route, Router } from "lucide-react";
+import { Route, Routes,Navigate } from "react-router-dom";
 import { SignUp } from "./pages/Signup";
 import { ProtectRoute } from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 
 
 import { Login } from "./pages/Login";
-import { SignUp } from "./pages/Signup";
+
 import JobsPage from "./pages/JobsPage";
 import JobDetailPage from "./pages/JobDetailPage";
 import AdminPostJob from "./pages/AdminPostJob";
 import MyApplicationPage from "./pages/MyApplicationPage";
 import AdminJobs from "./pages/AdminJobs";
 
+
 export default function App() {
   
   return (
     <>
       <AuthProvider>
-        <Router>
+        <Routes>
           <Route path="/login" element={<Login />}></Route>
           <Route path="/signup" element={<SignUp />}></Route>
 
@@ -33,7 +34,7 @@ export default function App() {
 
           {/* Global fallback redirect */}
           <Route path="*" element={<Navigate to="/login" replace />} />
-        </Router>
+        </Routes>
       </AuthProvider>
     </>
   );
