@@ -13,15 +13,15 @@ export const AuthProvider=({children})=>{
     const login=(userData,userToken)=>{
         setToken(userToken);
         setUser(userData);
-        localStorage.setItem('user',userToken);
-        localStorage.setItem('token',JSON.stringify(userData));
+        localStorage.setItem('user',JSON.stringify(userData));
+        localStorage.setItem('token',userToken);
     }
     // logout
     const logout=()=>{
         setToken(null);
         setUser(null);
-        localStorage.setItem('user');
-        localStorage.setItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
     }
     useEffect(()=>{
         const storedUser=localStorage.getItem('user');
@@ -31,7 +31,7 @@ export const AuthProvider=({children})=>{
             }
             catch(error){
                     console.error("failed parsing session user context",error);
-                    logout;
+                    logout();
             }
         }
         setLoading(false);
