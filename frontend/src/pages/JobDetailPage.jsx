@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom'; // 💡 Added useLocation
 import { getJobById } from '../api/Jobs';
 import { applyToJob, getMyApplication } from '../api/applications';
-import { AlertTriangle, ArrowLeft, CheckCircle, ExternalLink, HelpCircle, Loader2, Trophy } from 'lucide-react';
-
+import { useAuth } from '../context/AuthContext';
+import { AlertTriangle, ArrowLeft, CheckCircle, ExternalLink, HelpCircle, Loader2 } from 'lucide-react';
 
 function JobDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation(); // 💡 Used to detect route state
+  const { user } = useAuth();
+
+  // 💡 BETTER DETECTOR: Checks route state origin OR user role data structures
+  const isAdmin = location.state?.fromAdmin || user?.role === 'admin' ;
 
   const [job, setJob] = useState(null);
   const [hasApplied, sethasApplied] = useState(false);
@@ -17,100 +22,95 @@ function JobDetailPage() {
   const [applyLoading, setApplyLoading] = useState(false);
   const [error, setError] = useState('');
 
-
-
   useEffect(() => {
     const fetchJobandApplicationStatus = async () => {
-
-
       try {
         setLoading(true);
         setError('');
 
-        const [jobData, myApplications] = await Promise.all([getJobById(id), getMyApplication()]);
+        if (isAdmin) {
+          // 🛡️ ADMIN MODE: Only fetch job parameters, skip student application validations entirely
+          const jobData = await getJobById(id);
+          setJob(jobData);
+        } else {
+          // 🎓 STUDENT MODE: Parallel load checks
+          const [jobData, myApplications] = await Promise.all([getJobById(id), getMyApplication()]);
+          setJob(jobData);
 
-        setJob(jobData);
+          const rawList = myApplications?.applications;
+          const applicationsArray = Array.isArray(rawList) ? rawList : [];
 
-        const rawList = myApplications?.applications;
-        const applicationsArray = Array.isArray(rawList) ? rawList : [];
+          const alreadyApplied = applicationsArray.some((app) => {
+            const targetJobId = app.jobId?._id || app.jobId;
+            return targetJobId === id;
+          });
 
-        // Clean, well-spaced logic match check
-        const alreadyApplied = applicationsArray.some((app) => {
-          const targetJobId = app.jobId?._id || app.jobId;
-          return targetJobId === id;  
-        });
-
-        sethasApplied(alreadyApplied);
-
-      }
-      catch (error) {
-        setError(error.response?.data.message || 'Failed to finalize application status');
-      }
-      finally {
+          sethasApplied(alreadyApplied);
+        }
+      } catch (error) {
+        setError(error.response?.data?.message || 'Failed to finalize application status');
+      } finally {
         setLoading(false);
       }
-
-    }
+    };
     fetchJobandApplicationStatus();
-  }, [id]);
+  }, [id, isAdmin]);
 
-  //  open external tab to Apply to job
+  // Open external tab to Apply to job
   const handleOpenForm = () => {
     if (job?.externalLink) {
       window.open(job.externalLink, '_blank', 'noopener,noreferrer');
       setFormOpened(true);
-
-    }
-    else {
+    } else {
       setError("External application link missing for this posting.");
     }
-  }
+  };
 
-  // handle submit application
+  // Handle submit application
   const handleConfirmSubmission = async () => {
     setApplyLoading(true);
     setError('');
     try {
-      const response = await applyToJob(id);
-      console.log(response);
+      await applyToJob(id);
       sethasApplied(true);
-
-    }
-    catch (error) {
+    } catch (error) {
       setError(error.response?.data?.message || "Failed to finalize application status");
-    }
-    finally {
+    } finally {
       setApplyLoading(false);
     }
-  }
+  };
 
-  // while syncing data
+  // While syncing data
   if (loading) {
     return (
       <div className='min-h-[60vh] flex flex-col items-center justify-center gap-2'>
         <Loader2 size={32} className='animate-spin text-violet-600' />
         <span className='text-xs text-slate-400 uppercase font-medium'>Syncing Data...</span>
       </div>
-    )
+    );
   }
 
-  // if any error comes
+  // If any error comes
   if (error && !job) {
     return (
-      <div className='max-w-md mx-auto mt-12 bg-red-50  rounded-2xl border-dashed border-red-100 items-start gap-3 p-2'>
-        <AlertTriangle size={32} className='text-red-500 mt-0.5' />
+      <div className='max-w-md mx-auto mt-12 bg-red-50 rounded-2xl border border-dashed border-red-100 flex items-start gap-3 p-4'>
+        <AlertTriangle size={24} className='text-red-500 shrink-0 mt-0.5' />
         <div>
           <h5 className="text-xs font-bold text-red-700 uppercase tracking-wider">Failed to Load</h5>
           <p className="text-xs font-semibold text-red-600 mt-0.5">{error}</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 antialiased font-sans">
-      <button onClick={() => navigate('/jobs')} className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-wider mb-6 cursor-pointer">
-        <ArrowLeft size={14} /> Return to Openings
+      {/* 💡 FIXED DIRECTION: Navigates back accurately using the updated check */}
+      <button 
+        onClick={() => navigate(isAdmin ? '/admin/jobs' : '/jobs')} 
+        className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors uppercase tracking-wider mb-6 cursor-pointer"
+      >
+        <ArrowLeft size={14} /> Return to {isAdmin ? 'Management Board' : 'Openings'}
       </button>
 
       <div className="bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.01)] rounded-3xl p-6 md:p-8">
@@ -137,19 +137,24 @@ function JobDetailPage() {
             </div>
           )}
 
-          {hasApplied ? (
-            /* STATE A: Database entry verified. Locked completely */
+          {/* 💡 CHANGER: Show administrative disclaimer card instead of application form states */}
+          {isAdmin ? (
+            <div className="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-center normal-case">
+              <span className="text-xs font-bold text-slate-700 block">🛡️ Administrative Review Window</span>
+              <p className="text-[11px] font-medium text-slate-400 mt-0.5">
+                Eligibility and application gateways are hidden on the coordinator overview panel.
+              </p>
+            </div>
+          ) : hasApplied ? (
             <div className="w-full bg-slate-100 text-slate-500 font-bold text-xs rounded-xl py-3.5 flex items-center justify-center gap-1.5 select-none border border-slate-200">
               <CheckCircle size={15} className="text-emerald-500" />
               Applied ✓
             </div>
           ) : job.eligible === false ? (
-            /* STATE B: Student profile doesn't meet requirements */
             <div className="w-full bg-slate-50 text-slate-400 font-bold text-xs rounded-xl py-3.5 text-center border border-dashed border-slate-200 select-none">
-              Profile Ineligible (CGPA Cutoff Mismatch)
+              Profile Ineligible 
             </div>
           ) : !formOpend ? (
-            /* STATE C: Phase 1 – Launch Link Form Target Gateway */
             <button
               onClick={handleOpenForm}
               className="w-full py-3.5 bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs rounded-xl uppercase tracking-wide shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
@@ -157,7 +162,6 @@ function JobDetailPage() {
               Step 1: Open External Application Form <ExternalLink size={13} />
             </button>
           ) : (
-            /* STATE D: Phase 2 – Active user verification loop interface */
             <div className="bg-amber-50/60 border border-amber-100 rounded-2xl p-4 flex flex-col gap-3">
               <div className="flex items-start gap-2.5">
                 <HelpCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
@@ -192,4 +196,4 @@ function JobDetailPage() {
   );
 }
 
-export default JobDetailPage; 
+export default JobDetailPage;

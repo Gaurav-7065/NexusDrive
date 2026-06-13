@@ -1,9 +1,13 @@
 import Job from "../modals/Job.js";
 import User from '../modals/User.js'
 export async function createJob(req,res){
-
+   
     try{
+       
         const {companyName,role,ctc,minCgpa,allowedYears,deadline,externalLink}=req.body;
+        
+        console.log(req.body);
+        console.log(req.user.id);
        const newJob= await Job.create({
              companyName,
              role,
@@ -14,6 +18,7 @@ export async function createJob(req,res){
              externalLink,
              postedBy:req.user.id
         })
+        console.log(externalLink);
 
         res.status(200).json({
             message:"Placement drive created successfully! 🚀",

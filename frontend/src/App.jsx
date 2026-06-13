@@ -3,6 +3,7 @@ import { Route, Routes,Navigate } from "react-router-dom";
 import { SignUp } from "./pages/Signup";
 import { ProtectRoute } from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from 'react-hot-toast';
 
 
 import { Login } from "./pages/Login";
@@ -38,6 +39,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </AuthProvider>
+      <Toaster/>
     </>
   );
 }
