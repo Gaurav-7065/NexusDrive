@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState,useContext } from "react";
 
 
 export const AuthContext=createContext(null);
@@ -40,5 +40,13 @@ export const AuthProvider=({children})=>{
     return <AuthContext.Provider value={{user,token,loading,login,logout}}>
         {!loading&&children}
     </AuthContext.Provider>
+
+}
+export const useAuth=()=>{
+    const context=useContext(AuthContext);
+    if(!context){
+        throw new Error("useAuth must be used within an AuthProvider wrapper")
+    }
+    return context;
 
 }
