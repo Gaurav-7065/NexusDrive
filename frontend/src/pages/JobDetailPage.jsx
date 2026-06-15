@@ -12,7 +12,7 @@ function JobDetailPage() {
   const { user } = useAuth();
 
   // 💡 BETTER DETECTOR: Checks route state origin OR user role data structures
-  const isAdmin = location.state?.fromAdmin || user?.role === 'admin' ;
+  const isAdmin = location.state?.fromAdmin || user?.role === 'coordinator' ;
 
   const [job, setJob] = useState(null);
   const [hasApplied, sethasApplied] = useState(false);
