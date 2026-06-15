@@ -6,6 +6,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from 'react-hot-toast';
 
 
+
 import { Login } from "./pages/Login";
 
 import JobsPage from "./pages/JobsPage";
@@ -13,6 +14,7 @@ import JobDetailPage from "./pages/JobDetailPage";
 import AdminPostJob from "./pages/AdminPostJob";
 import MyApplicationPage from "./pages/MyApplicationPage";
 import AdminJobs from "./pages/AdminJobs";
+import Navbar from "./components/NavBar";
 
 
 export default function App() {
@@ -20,6 +22,7 @@ export default function App() {
   return (
     <>
       <AuthProvider>
+        <Navbar/>
         <Routes>
           <Route path="/signup" element={<SignUp />}></Route>
           <Route path="/login" element={<Login />}></Route>
