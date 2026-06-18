@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getMyApplication } from '../api/applications';
-
 import { Loader2, AlertCircle, Calendar, Briefcase, DollarSign, Building } from 'lucide-react';
+
 function MyApplicationPage() {
-  const [applications, setApplications] = useState();
+  const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -17,23 +17,18 @@ function MyApplicationPage() {
         const myapplications = await getMyApplication();
         const rawList = myapplications?.applications;
         const applicationArray = Array.isArray(rawList) ? rawList : [];
-
         setApplications(applicationArray);
-      }
-      catch (error) {
-        setError(error.response?.data.message || 'didnt  fetched ur application');
-      }
-      finally {
+      } catch (error) {
+        setError(error.response?.data.message || 'Could not fetch your applications');
+      } finally {
         setLoading(false);
       }
-    }
+    };
     fetchAllMyApplication();
-  }, [])
+  }, []);
 
-  // // Helper utility function to handle dynamic task status badge styling dynamically
   const getStatusBadgeStyle = (status) => {
     const normalized = status?.toLowerCase() || 'applied';
-
     switch (normalized) {
       case 'shortlisted':
         return 'bg-amber-50 text-amber-700 border-amber-200';
@@ -44,10 +39,8 @@ function MyApplicationPage() {
       case 'applied':
       default:
         return 'bg-blue-50 text-blue-700 border-blue-200';
-
     }
-
-  }
+  };
 
   if (loading) {
     return (
@@ -72,8 +65,10 @@ function MyApplicationPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 antialiased font-sans">
+      
+      {/* Header Info */}
       <div className="mb-6">
-        <h2 className="text-xl font-black text-slate-900 tracking-tight">Application Tracking Portal</h2>
+        <h2 className="text-xl font-black text-base-900 tracking-normal">Application Tracking Portal</h2>
         <p className="text-xs font-bold text-slate-400 mt-0.5 uppercase tracking-wide">Monitor your active recruitment cycles</p>
       </div>
 
@@ -88,9 +83,63 @@ function MyApplicationPage() {
           </button>
         </div>
       ) : (
-        /* Clean Tailwind-styled HTML Table layout Container Wrapper */
-        <div className="bg-white border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.01)] rounded-2xl overflow-hidden">
-          <div className="overflow-x-auto">
+        /* Back to White Container with a Subtle Slate Border */
+        <div className="bg-white border border-slate-100 shadow-sm rounded-2xl overflow-hidden">
+          
+          {/* 📱 1. MOBILE RESPONSIVE LAYOUT (Card Grid Stack View - White Theme) */}
+          <div className="block lg:hidden divide-y divide-slate-100">
+            {applications.map((app) => {
+              const jobInfo = app.jobId || {};
+              const formattedDate = app.updatedAt
+                ? new Date(app.updatedAt).toISOString().split('T')[0]
+                : 'N/A';
+
+              return (
+                <div key={app._id} className="p-5 flex flex-col gap-4 bg-white hover:bg-slate-50/50 transition-colors">
+                  
+                  {/* Card Topline: Company & Status */}
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 shrink-0">
+                        <Building size={14} />
+                      </div>
+                      <span className="font-bold text-sm text-slate-800 leading-tight">
+                        {jobInfo.companyName || 'Unknown Employer'}
+                      </span>
+                    </div>
+                    
+                    <span className={`px-2.5 py-1 text-[9px] font-extrabold uppercase tracking-wider border rounded-md shrink-0 ${getStatusBadgeStyle(app.status)}`}>
+                      {app.status || 'applied'}
+                    </span>
+                  </div>
+
+                  {/* Card Middle: Role Title info */}
+                  <div className="flex items-center gap-2 pl-1">
+                    <Briefcase size={14} className="text-slate-400 shrink-0" />
+                    <span className="text-xs font-semibold text-slate-600">
+                      {jobInfo.role || 'General Role Posting'}
+                    </span>
+                  </div>
+
+                  {/* Card Footer Metrics Grid */}
+                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-[11px]">
+                    <div className="flex items-center gap-1.5 text-slate-500">
+                      <DollarSign size={13} className="text-slate-400" />
+                      <span className="font-mono text-slate-700 font-bold">{jobInfo.ctc || 'N/A'}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-slate-500 justify-end">
+                      <Calendar size={13} className="text-slate-400" />
+                      <span className="font-mono text-slate-400">{formattedDate}</span>
+                    </div>
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 💻 2. DESKTOP RESPONSIVE LAYOUT (Traditional Horizontal Table - White Theme) */}
+          <div className="hidden lg:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
@@ -103,7 +152,6 @@ function MyApplicationPage() {
               </thead>
               <tbody className="divide-y divide-slate-50 text-xs font-semibold text-slate-600">
                 {applications.map((app) => {
-                  // Fallback handling if a job listing gets deleted by an admin
                   const jobInfo = app.jobId || {};
                   const formattedDate = app.updatedAt
                     ? new Date(app.updatedAt).toISOString().split('T')[0]
@@ -126,6 +174,7 @@ function MyApplicationPage() {
               </tbody>
             </table>
           </div>
+
         </div>
       )}
     </div>

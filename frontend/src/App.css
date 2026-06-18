@@ -16,3 +16,15 @@
 :root {
   color-scheme: light; /* 💡 Forces the browser to strictly use light-theme rendering rules */
 }
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  html {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
