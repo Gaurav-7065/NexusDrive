@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllJobs } from '../api/Jobs';
-import { Loader2, AlertCircle, Plus, Calendar, Eye } from 'lucide-react';
+import { Loader2, AlertCircle, Plus, Calendar, Eye, Briefcase } from 'lucide-react';
 
 function AdminJobs() {
   const navigate = useNavigate();
@@ -93,10 +93,10 @@ function AdminJobs() {
                     </span>
 
                     <button 
-                      onClick={() => navigate(`/jobs/${job._id}`, { state: { fromAdmin: true } })}
+                      onClick={() => navigate(`/admin/application-status/${job._id}`, { state: { fromAdmin: true } })}
                       className="py-1 px-2.5 text-slate-500 hover:text-violet-600 border border-slate-100 bg-white hover:bg-violet-50 rounded-lg cursor-pointer inline-flex items-center gap-1 transition-colors font-bold text-[10px] uppercase tracking-wide shrink-0"
                     >
-                      <Eye size={11} /> View
+                      <Eye size={11} /> Update Status
                     </button>
                   </div>
 
@@ -162,10 +162,10 @@ function AdminJobs() {
                       </td>
                       <td className="py-4 px-6 text-center">
                         <button 
-                          onClick={() => navigate(`/jobs/${job._id}`, { state: { fromAdmin: true } })}
+                          onClick={() => navigate(`/admin/application-status/${job._id}`, { state: { fromAdmin: true } })}
                           className="p-1.5 text-slate-400 hover:text-violet-600 border border-slate-100 bg-white hover:bg-violet-50 rounded-lg cursor-pointer inline-flex items-center gap-1 transition-colors font-bold text-[10px] uppercase tracking-wide px-2.5"
                         >
-                          <Eye size={12} /> View Details
+                          <Eye size={12} />Update Status
                         </button>
                       </td>
                     </tr>

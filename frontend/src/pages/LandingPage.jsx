@@ -138,12 +138,12 @@ export default function LandingPage() {
         </div>
 
         {/* Right Layout Block: Live Metrics Card Dashboard element */}
-        <div className="relative flex justify-center md:justify-end items-center w-full h-full">
+        <div className="relative flex justify-center md:justify-end items-center w-full h-full  ">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="w-72 h-72 rounded-full bg-violet-300/20 blur-3xl" />
           </div>
 
-          <div className="relative z-10 w-full max-w-sm bg-base-100 rounded-2xl border border-base-300 shadow-2xl p-6">
+          <div className="relative z-10 w-full max-w-sm bg-base-100 rounded-2xl border border-base-300 shadow-2xl p-6 hover:scale-105 trasnsition-transform duration-500">
             <div className="flex items-start justify-between mb-5">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-base-content/40 mb-1">Active Drive</p>
@@ -152,7 +152,7 @@ export default function LandingPage() {
               <span className="badge badge-success text-white text-[10px] font-bold border-none px-2.5">OPEN</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mb-5">
+            <div className="grid grid-cols-2 gap-3 mb-5 ">
               {[["💰 CTC", "₹22 LPA"], ["📍 Location", "Bengaluru"], ["🎯 Role", "SDE-1"], ["📅 Deadline", "Jun 30"]].map(([k, v]) => (
                 <div key={k} className="bg-base-200 rounded-xl px-3 py-2.5 border border-base-300">
                   <p className="text-[10px] font-semibold text-base-content/40">{k}</p>
