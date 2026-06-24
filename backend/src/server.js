@@ -15,7 +15,7 @@ import noticeRoutes from './routes/notice.route.js'
 dotenv.config(); 
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173', // or your real deployed website URL
+  origin: ENV.FRONTEND_URL, // or your real deployed website URL
   credentials: true 
 }));
 // Authoriztion
