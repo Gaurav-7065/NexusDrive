@@ -10,6 +10,7 @@ import authRoutes from './routes/auth.routes.js'
 import verifyToken from './middleware/verifyToken.js';
 import jobRoutes from './routes/job.routes.js'
 import applyRoutes from './routes/application.route.js'
+import noticeRoutes from './routes/notice.route.js'
 
 dotenv.config(); 
 app.use(express.json());
@@ -29,9 +30,22 @@ app.get('/api/test',verifyToken,(req,res)=>{
 
 })
 
+// update job status
+app.patch('/api/jobs',jobRoutes);
+// get applicant
+app.use('/api/jobs',jobRoutes);
+
+// post Notice
+app.use('/api/notice',noticeRoutes);
+app.use('/api/notice',noticeRoutes);
+
+// Test
 app.get("/",(req,res)=>{
     res.status(200).send("server is live");
 })
+
+
+
 
 const startServer=async()=>{
     try{

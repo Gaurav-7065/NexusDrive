@@ -7,7 +7,7 @@ import { Building, Briefcase, Award, Calendar, Link, ArrowLeft, Loader2, IndianR
 
 function AdminPostJob() {
   const navigate = useNavigate();
-  
+
   const options = [
     { value: 1, label: "1st Year" },
     { value: 2, label: "2nd Year" },
@@ -45,14 +45,14 @@ function AdminPostJob() {
 
       await API.post('/jobs', payload);
       toast.success("Job Posted Successfully!");
-      
+
       setCompanyName('');
       setRole('');
       setCtc('');
       setMinCgpa('');
       setDeadline('');
       setExternalLink('');
-      
+
       setTimeout(() => {
         navigate('/admin/jobs');
       }, 1200);
@@ -68,12 +68,12 @@ function AdminPostJob() {
   return (
     /* FIXED: Changed bg-slate-50 to bg-base-200 to dynamically follow theme backgrounds */
     <div className='bg-base-200 flex flex-col justify-center items-center min-h-screen py-12 px-4 antialiased font-sans transition-colors duration-200'>
-      
+
       {/* Navigation Row Utility */}
       <div className="w-full max-w-xl mb-4 flex justify-start">
         {/* FIXED: Dynamic base-content color with fallback opacity */}
-        <button 
-          onClick={() => navigate('/admin/jobs')} 
+        <button
+          onClick={() => navigate('/admin/jobs')}
           className="flex items-center gap-1.5 text-xs font-bold text-base-content/50 hover:text-base-content uppercase tracking-wider cursor-pointer transition-colors"
         >
           <ArrowLeft size={14} /> Back to Openings
@@ -81,8 +81,8 @@ function AdminPostJob() {
       </div>
 
       {/* FIXED: Changed template background and text variables to base tokens */}
-      <form 
-        onSubmit={handleSubmit} 
+      <form
+        onSubmit={handleSubmit}
         className='p-6 md:p-10 rounded-3xl border border-base-300 shadow-sm flex flex-col bg-base-100 w-full max-w-xl gap-5 text-xs font-bold text-base-content/70 uppercase tracking-wide transition-colors duration-200'
       >
         <div>
@@ -99,138 +99,130 @@ function AdminPostJob() {
 
         {/* Input Fields Content Sections */}
         <div className='flex flex-col gap-1.5'>
-          <label className='text-base-content flex items-center gap-1.5'><Building size={13}/> Company Name</label>
+          <label className='text-base-content flex items-center gap-1.5'><Building size={13} /> Company Name</label>
           {/* FIXED: Input bg switched to base-200, colors to text-base-content */}
-          <input 
+          <input
             required
             type="text"
             value={companyName}
-          
-            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors' 
-            placeholder='e.g. Microsoft' 
-            onChange={(e) => setCompanyName(e.target.value)} 
+
+            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors'
+            placeholder='e.g. Microsoft'
+            onChange={(e) => setCompanyName(e.target.value)}
           />
         </div>
 
         <div className='flex flex-col gap-1.5'>
-          <label className='text-base-content flex items-center gap-1.5'><Briefcase size={13}/> Designation Role</label>
-          <input 
+          <label className='text-base-content flex items-center gap-1.5'><Briefcase size={13} /> Designation Role</label>
+          <input
             required
             type="text"
             value={role}
-            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors' 
-            placeholder='e.g. Frontend Developer Intern' 
-            onChange={(e) => setRole(e.target.value)} 
+            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors'
+            placeholder='e.g. Frontend Developer Intern'
+            onChange={(e) => setRole(e.target.value)}
           />
         </div>
 
         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
           <div className='flex flex-col gap-1.5'>
-            <label className='text-base-content flex items-center gap-1.5'><IndianRupee size={13}/> Compensation (CTC)</label>
-            <input 
+            <label className='text-base-content flex items-center gap-1.5'><IndianRupee size={13} /> Compensation (CTC)</label>
+            <input
               required
               type="text"
               value={ctc}
-              className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors' 
-              placeholder='e.g. 18 LPA' 
-              onChange={(e) => setCtc(e.target.value)} 
+              className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors'
+              placeholder='e.g. 18 LPA'
+              onChange={(e) => setCtc(e.target.value)}
             />
           </div>
 
           <div className='flex flex-col gap-1.5'>
-            <label className='text-base-content flex items-center gap-1.5'><Award size={13}/> Min CGPA Cutoff</label>
-            <input 
+            <label className='text-base-content flex items-center gap-1.5'><Award size={13} /> Min CGPA Cutoff</label>
+            <input
               required
-              type='number' 
+              type='number'
               step="0.01"
               value={minCgpa}
-              className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors' 
-              placeholder='e.g. 7.5' 
-              onChange={(e) => setMinCgpa(e.target.value)} 
+              className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors'
+              placeholder='e.g. 7.5'
+              onChange={(e) => setMinCgpa(e.target.value)}
             />
           </div>
         </div>
 
-        <div className='flex flex-col gap-1.5'>
-          <label className='text-base-content flex items-center gap-1.5'>Target Eligible Batches</label>
+        <div className='flex flex-col gap-1.5 w-full'>
+          <label className='text-base-content flex items-center gap-1.5 font-semibold text-sm'>
+            Target Eligible Batches
+          </label>
           <Select
             isMulti
             options={options}
             placeholder="Choose graduation timelines..."
-            menuPortalTarget={document.body}
-            menuPosition="fixed"
             onChange={(selectedOptions) => setAllowedYears(selectedOptions ? selectedOptions.map(opt => opt.value) : [])}
-            /* FIXED: React-Select styles mapped to CSS variables to adapt dynamically to light/dark modes */
-            styles={{
-              control: (base) => ({
-                ...base,
-                backgroundColor: 'var(--fallback-b2, hsl(var(--b2)))',
-                borderRadius: '0.75rem',
-                borderColor: 'var(--fallback-b3, hsl(var(--b3)))',
-                padding: '0.125rem',
-                fontSize: '13px',
-                fontWeight: '500',
-                textTransform: 'none',
-                fontFamily: 'inherit',
-                boxShadow: 'none',
-                '&:hover': {
-                  borderColor: '#8b5cf6'
+
+            classNames={{
+              control: ({ isFocused }) => `
+        !bg-base-200 !border-base-300 !rounded-xl !p-0.5 !text-sm
+        !normal-case !font-normal
+        ${isFocused ? '!border-primary !ring-1 !ring-primary' : 'hover:!border-base-content/30'}
+      `,
+              menu: () => `
+        !bg-base-100 !border !border-base-300 !rounded-xl !shadow-xl !mt-2 !z-50
+      `,
+              option: ({ isFocused, isSelected }) => `
+        !px-4 !py-2.5 !text-sm !cursor-pointer !transition-colors
+        !normal-case !font-normal
+        ${isSelected
+                  ? '!bg-primary !text-primary-content'
+                  : isFocused
+                    ? '!bg-base-300 !text-base-content'
+                    : '!bg-transparent !text-base-content'
                 }
-              }),
-              menu: (base) => ({
-                ...base,
-                backgroundColor: 'var(--fallback-b1, hsl(var(--b1)))',
-                color: 'var(--fallback-bc, hsl(var(--bc)))'
-              }),
-              option: (base, state) => ({
-                ...base,
-                backgroundColor: state.isFocused ? 'var(--fallback-b3, hsl(var(--b3)))' : 'transparent',
-                color: 'var(--fallback-bc, hsl(var(--bc)))',
-                fontSize: '13px',
-                textTransform: 'none'
-              }),
-              multiValue: (base) => ({
-                ...base,
-                backgroundColor: 'var(--fallback-b3, hsl(var(--b3)))',
-                borderRadius: '0.375rem'
-              }),
-              multiValueLabel: (base) => ({
-                ...base,
-                color: 'var(--fallback-bc, hsl(var(--bc)))',
-                textTransform: 'none'
-              }),
-              placeholder: (base) => ({
-                ...base,
-                color: 'var(--fallback-bc, hsl(var(--bc) / 0.4))'
-              })
+      `,
+              multiValue: () => `
+        !bg-base-300 !rounded-lg !m-0.5
+      `,
+              multiValueLabel: () => `
+        !text-base-content !text-xs !px-2 !py-0.5 !normal-case !font-normal
+      `,
+              multiValueRemove: () => `
+        !text-base-content/60 hover:!bg-error/20 hover:!text-error !px-1.5 !rounded-r-lg !transition-colors
+      `,
+              placeholder: () => `
+        !text-base-content/40 !text-sm !normal-case !font-normal
+      `
+            }}
+
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 9999 })
             }}
           />
         </div>
-
         <div className='flex flex-col gap-1.5'>
-          <label className='text-base-content flex items-center gap-1.5'><Calendar size={13}/> Close Registration Deadline</label>
-          <input 
+          <label className='text-base-content flex items-center gap-1.5'><Calendar size={13} /> Close Registration Deadline</label>
+          <input
             required
-            type='date' 
+            type='date'
             value={deadline}
-            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal text-base-content focus:outline-none focus:border-violet-500 transition-colors [color-scheme:light] dark:[color-scheme:dark]' 
+            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal text-base-content focus:outline-none focus:border-violet-500 transition-colors [color-scheme:light] dark:[color-scheme:dark]'
             onChange={(e) => setDeadline(e.target.value)}
           />
         </div>
 
         <div className='flex flex-col gap-1.5'>
-          <label className='text-base-content flex items-center gap-1.5'><Link size={13}/> External Gateway Form Link</label>
-          <input 
+          <label className='text-base-content flex items-center gap-1.5'><Link size={13} /> External Gateway Form Link</label>
+          <input
             required
-            type='url' 
+            type='url'
             value={externalLink}
-            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors' 
-            placeholder='https://careers.microsoft.com/...' 
+            className='px-4 py-3 bg-base-200 border border-base-300 rounded-xl font-medium tracking-normal normal-case text-base-content focus:outline-none focus:border-violet-500 transition-colors'
+            placeholder='https://careers.microsoft.com/...'
             onChange={(e) => setExternalLink(e.target.value)}
           />
         </div>
 
-        <button 
+        <button
           type="submit"
           disabled={loading}
           className='mt-3 px-4 py-3.5 bg-violet-600 hover:bg-violet-700 text-white font-bold rounded-xl transition-all uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-sm disabled:bg-slate-300'

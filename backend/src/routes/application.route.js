@@ -1,10 +1,12 @@
 import express from 'express'
 import verifyToken from '../middleware/verifyToken.js';
 import {applyController} from '../controllers/application.controller.js';
+import isCoordinator from '../middleware/isCoordinator.js';
 
 const router=express.Router();
 
 router.get('/mine',verifyToken,applyController.getMyApplication);
 router.post('/',verifyToken,applyController.applyJob);
+
 
 export default router;

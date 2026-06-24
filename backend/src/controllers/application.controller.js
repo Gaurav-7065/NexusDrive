@@ -24,7 +24,7 @@ export async function applyJob(req,res) {
         studentId:req.user.id,
         jobId:jobId
     });
-    console.log(req.user.id);
+
 
     if(alreadyApplied){
       return  res.status(400).json({message:"You have already applied to this job placement drive"});
@@ -68,7 +68,11 @@ export async function getMyApplication(req,res) {
     }
 }
 
+
+
+
 export const applyController={
     applyJob,
-    getMyApplication
+    getMyApplication,
+    
 }

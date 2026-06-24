@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, Briefcase, FolderHeart, Mail, LayoutDashboard, PlusCircle, UserCircle, Menu, X, Sun, Moon } from 'lucide-react';
+import { LogOut, Briefcase, FolderHeart, Mail, LayoutDashboard, PlusCircle, UserCircle, Menu, X, Sun, Moon, MessageCircleCheck, Bell } from 'lucide-react';
+import { useNotification } from '../context/NotificationContext';
 
 function Navbar() {
   const { user, logout } = useAuth();
@@ -10,7 +11,10 @@ function Navbar() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('nexus-theme') || 'light';
   });
-  
+
+  const { unreadCount, markAllasRead } = useNotification();
+
+
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -65,6 +69,9 @@ function Navbar() {
           <Link to="/admin/post-job" onClick={() => setIsOpen(false)} className={getDynamicClasses('/admin/post-job')}>
             <PlusCircle size={isMobileView ? 16 : 14} /> Post New Job
           </Link>
+          <Link to="/admin/sent-message" onClick={() => setIsOpen(false)} className={getDynamicClasses('/admin/sent-message')}>
+            <MessageCircleCheck size={isMobileView ? 16 : 14} />Sent Message
+          </Link>
         </>
       );
     }
@@ -80,6 +87,27 @@ function Navbar() {
         <Link to="/contact" onClick={() => setIsOpen(false)} className={getDynamicClasses('/contact')}>
           <Mail size={isMobileView ? 16 : 14} /> Support & Contact
         </Link>
+        <Link
+          to="/messages"
+          onClick={() => setIsOpen(false)}
+          className={`${getDynamicClasses('/messages')}  relative inline-block`}
+        >
+          <div className='flex text-center gap-2'>
+            <Bell size={isMobileView ? 18 : 22} />
+            <div className='text-center'>{isMobileView?"messages":""}</div>
+
+          </div>
+          
+          
+          
+
+          {unreadCount > 0 && (
+            <span className="absolute -top-0.5   left-6   flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600  text-[12px] font-bold text-white steps">
+              {unreadCount}
+            </span>
+          )}
+          
+        </Link>
       </>
     );
   };
@@ -91,8 +119,8 @@ function Navbar() {
           <div className="flex justify-between h-16 items-center">
 
             {/* 🏷️ LEFT BLOCK: Brand Identity */}
-            <div 
-              className="flex items-center gap-2 cursor-pointer select-none" 
+            <div
+              className="flex items-center gap-2 cursor-pointer select-none"
               onClick={() => navigate(isCoordinator ? '/admin/jobs' : '/jobs')}
             >
               <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center text-white font-black text-sm shadow-sm">
@@ -110,13 +138,13 @@ function Navbar() {
 
             {/* 🛠️ RIGHT BLOCK: Toolbar Actions & Menu Trigger */}
             <div className="flex items-center gap-2 sm:gap-3">
-              
+
               {/* 💻 100xDevs Style Theme Toggler Switch (Desktop) */}
               <label className="btn btn-ghost btn-circle swap swap-rotate text-base-content hover:bg-base-200 transition-colors duration-200 cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  onChange={toggleTheme} 
-                  checked={theme === 'dark'} 
+                <input
+                  type="checkbox"
+                  onChange={toggleTheme}
+                  checked={theme === 'dark'}
                 />
                 {/* swap-on renders when checked (dark theme), displaying the Sun to return to light */}
                 <Sun size={18} className="swap-on text-base-content fill-none" />
@@ -145,7 +173,7 @@ function Navbar() {
               </button>
 
               {/* 📱 MOBILE HAMBURGER TOGGLE BUTTON */}
-              <button 
+              <button
                 onClick={() => setIsOpen(true)}
                 className="btn border-none bg-base-content text-base-100 hover:opacity-90 btn-square shadow-md rounded-xl flex lg:hidden items-center justify-center cursor-pointer transition-all"
               >
@@ -158,30 +186,29 @@ function Navbar() {
       </nav>
 
       {/* ══ 🎴 FULL PAGE MOBILE OVERLAY SYSTEM ══ */}
-      <div className={`fixed inset-0 w-screen h-screen bg-base-100 z-[999] lg:hidden flex flex-col p-6 transition-all duration-300 ease-out ${
-        isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-4 invisible'
-      }`}>
-        
+      <div className={`fixed inset-0 w-screen h-screen bg-base-100 z-[999] lg:hidden flex flex-col p-6 transition-all duration-300 ease-out ${isOpen ? 'opacity-100 translate-y-0 visible' : 'opacity-0 -translate-y-4 invisible'
+        }`}>
+
         {/* Top Floating Control Bar */}
         <div className="flex items-center justify-between w-full h-16 border-b border-base-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center text-white font-black text-sm">ND</div>
             <span className="text-xl font-extrabold tracking-tight text-base-content">NexusDrive</span>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {/* 📱 Mobile Mirror Tone Switcher Control */}
             <label className="btn btn-ghost btn-circle swap swap-rotate text-base-content hover:bg-base-200 cursor-pointer">
-              <input 
-                type="checkbox" 
-                onChange={toggleTheme} 
-                checked={theme === 'dark'} 
+              <input
+                type="checkbox"
+                onChange={toggleTheme}
+                checked={theme === 'dark'}
               />
               <Sun size={18} className="swap-on text-base-content fill-none" />
               <Moon size={18} className="swap-off text-base-content fill-none" />
             </label>
 
-            <button 
+            <button
               onClick={() => setIsOpen(false)}
               className="btn btn-ghost btn-circle text-base-content hover:bg-base-200 flex items-center justify-center cursor-pointer"
             >
@@ -199,7 +226,7 @@ function Navbar() {
               <p className="text-[10px] font-extrabold text-violet-500 uppercase tracking-wider mt-0.5">{user?.role}</p>
             </div>
           </div>
-          
+
           {/* Mobile Logout Session Trigger */}
           <button
             onClick={handleLogout}
