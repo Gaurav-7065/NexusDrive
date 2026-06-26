@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom'
-import { Briefcase, MapPin, DollarSign, AlertCircle } from 'lucide-react';
+import { Briefcase, MapPin, DollarSign, AlertCircle, IndianRupee } from 'lucide-react';
 
 export const JobCard = ({ job }) => {
     const navigate=useNavigate();
@@ -46,7 +46,7 @@ export const JobCard = ({ job }) => {
                     <span>{job.location || 'Remote / On-site'}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <DollarSign size={14} className="text-slate-400" />
+                    <IndianRupee size={14} className="text-slate-400" />
                     <span>{job.ctc || 'Competitive'}</span>
                 </div>
                 <div className="ml-auto text-[11px] px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">
