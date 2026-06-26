@@ -6,6 +6,7 @@ import { ENV } from './lib/env.js';
 import cors from 'cors';
 import  http  from 'http';
 import { Server } from 'socket.io';
+import jwt from 'jsonwebtoken'
 
 
 import authRoutes from './routes/auth.routes.js'
@@ -17,13 +18,30 @@ import noticeRoutes from './routes/notice.route.js'
 const app = express();
 
 const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: ["http://localhost:5173", ENV.FRONTEND_URL],
-        methods: ["POST", "GET"]
-    }
-})
+    const io = new Server(server, {
+        cors: {
+            origin: ["http://localhost:5173", ENV.FRONTEND_URL],
+            methods: ["POST", "GET"]
+        }
+    })
 app.set('socketio', io);
+
+io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+
+    if (!token) {
+        return next(new Error("Authentication error: Token missing"));
+    }
+
+    try {
+        // Verify token using your existing JWT Secret Key
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.user = decoded; // Attach the user payload directly to the socket instance
+        next();
+    } catch (err) {
+        return next(new Error("Authentication error: Invalid token"));
+    }
+});
 
 io.on('connection', (socket) => {
     console.log(`⚡ A user connected to WebSockets: ${socket.id}`);
@@ -35,7 +53,7 @@ io.on('connection', (socket) => {
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173", // or your real deployed website URL
+    origin: ["http://localhost:5173",ENV.FRONTEND_URL], // or your real deployed website URL
     credentials: true
 }));
 // Authoriztion
