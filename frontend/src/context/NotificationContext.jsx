@@ -1,6 +1,10 @@
 import { Children, createContext, useContext, useEffect, useState } from "react";
 import { getallNotice } from "../api/notice";
 import { useAuth } from "./AuthContext";
+import {io} from 'socket.io-client'
+
+
+const SOCKET_URL="http://localhost:3000";
 
 
 export const NotifyContext=createContext();
@@ -19,6 +23,16 @@ export const NotifyProvider=({children})=>{
     })
 
     useEffect(()=>{
+        if(!user||!localStorage.getItem('token')){
+            setLoading(false);
+            return;
+        }
+
+        const socket=io(SOCKET_URL);
+        socket.on('new_Notice',(newMessage)=>{
+            setMessages((prevMessages)=>[newMessage,...prevMessages]);
+        })
+        
         const fetchMessages=async()=>{
             try{
                 const response=await getallNotice();
@@ -33,15 +47,15 @@ export const NotifyProvider=({children})=>{
             }
         }
         
-      if(user){
-       fetchMessages();
-       
-       
-      }
       
+       fetchMessages();
+        
+      return ()=>{
+        socket.disconnect();
+      }
        
 
-    },[]);
+    },[user]);
 
     const unreadCount=messages.filter(msg=>!readMessageId.includes(msg._id)).length;
 

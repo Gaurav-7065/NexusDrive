@@ -10,6 +10,8 @@ export const createNotice=async(req,res)=>{
             priority:priority,
             createdBy:req.user.id
         })
+        const io=req.app.get('socketio');
+        io.emit('new_Notice',newNotice);
         res.status(200).json({
             success:true,
             data:newNotice
