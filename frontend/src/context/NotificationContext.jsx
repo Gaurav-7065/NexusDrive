@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import {io} from 'socket.io-client'
 
 
-const SOCKET_URL="http://localhost:3000";
+const SOCKET_URL=import.meta.env.BACKEND_URL;
 
 
 export const NotifyContext=createContext();
@@ -28,7 +28,11 @@ export const NotifyProvider=({children})=>{
             return;
         }
 
-        const socket=io(SOCKET_URL);
+        const token=localStorage.getItem('token');
+        const socket=io(SOCKET_URL,{
+            auth: { token }
+        });
+        
         socket.on('new_Notice',(newMessage)=>{
             setMessages((prevMessages)=>[newMessage,...prevMessages]);
         })
