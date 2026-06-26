@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMyApplication } from '../api/applications';
-import { Loader2, AlertCircle, Calendar, Briefcase, DollarSign, Building } from 'lucide-react';
+import { Loader2, AlertCircle, Calendar, Briefcase, Building, IndianRupee } from 'lucide-react';
 
 function MyApplicationPage() {
   const [applications, setApplications] = useState([]);
@@ -124,7 +124,7 @@ function MyApplicationPage() {
                   {/* Card Footer Metrics Grid */}
                   <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-[11px]">
                     <div className="flex items-center gap-1.5 text-slate-500">
-                      <DollarSign size={13} className="text-slate-400" />
+                      <IndianRupee size={13} className="text-slate-400" />
                       <span className="font-mono text-slate-700 font-bold">{jobInfo.ctc || 'N/A'}</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-slate-500 justify-end">
@@ -145,7 +145,7 @@ function MyApplicationPage() {
                 <tr className="bg-slate-50 border-b border-slate-100 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
                   <th className="py-4 px-6"><div className="flex items-center gap-1.5"><Building size={12} /> Company</div></th>
                   <th className="py-4 px-6"><div className="flex items-center gap-1.5"><Briefcase size={12} /> Role</div></th>
-                  <th className="py-4 px-6"><div className="flex items-center gap-1.5"><DollarSign size={12} /> CTC</div></th>
+                  <th className="py-4 px-6"><div className="flex items-center gap-1.5"><IndianRupee size={12} /> CTC</div></th>
                   <th className="py-4 px-6"><div className="flex items-center gap-1.5"><Calendar size={12} /> Applied On</div></th>
                   <th className="py-4 px-6 text-center">Status</th>
                 </tr>
