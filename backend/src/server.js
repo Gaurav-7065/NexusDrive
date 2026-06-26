@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 
 app.use(express.json());
 app.use(cors({
-    origin: "http://localhost:5173", // or your real deployed website URL
+    origin: ["http://localhost:5173",ENV.FRONTEND_URL], // or your real deployed website URL
     credentials: true
 }));
 // Authoriztion
