@@ -4,7 +4,8 @@ import { useAuth } from "./AuthContext";
 import {io} from 'socket.io-client'
 
 
-const SOCKET_URL=import.meta.env.BACKEND_URL;
+
+const SOCKET_URL=import.meta.env.VITE_BACKEND_URL;
 
 
 export const NotifyContext=createContext();
